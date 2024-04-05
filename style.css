@@ -16,16 +16,10 @@ h1 {
 
 /* Example for styling a state */
 /* Targeting a specific state by its ID */
-#CA {
-    transition: all 0.2s ease; /* Smooth transition for the hover effect */
-    stroke-width: 1; /* Initial stroke width */
-    stroke: #d3d3d3; /* Initial stroke color */
+#svgMapContainer {
+    width: 100%; /* or a specific pixel width */
+    height: 500px; /* Adjust as needed */
+    display: block; /* Ensure it's not inline */
 }
 
-#CA:hover {
-    stroke: black; /* Change outline to black on hover */
-    stroke-width: 2; /* Make the outline slightly thicker */
-    transform: scale(1.05); /* Slightly enlarge the state */
-    transform-origin: center; /* Ensure the transformation scales from the state's center */
-}
 
