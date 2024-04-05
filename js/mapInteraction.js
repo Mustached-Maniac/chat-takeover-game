@@ -2,7 +2,7 @@
 function loadSVGMap() {
     const svgContainer = document.getElementById('svgMapContainer');
     // Adjusted path to reference SVG file from the "assets" folder, considering the location of the JavaScript file in the "js" folder
-    const svgURL = 'assets/US_Map_48states_1920x1080.svg';
+    const svgURL = '../assets/US_Map_48states_1920x1080.svg';
 
     fetch(svgURL)
         .then(response => response.text())
