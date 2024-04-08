@@ -3,7 +3,7 @@
 body {
     text-align: center;
     font-family: 'Montserrat', sans-serif; /* Changed font-family to Montserrat */
-    background-color: #f0f0f0;
+    background-color: hwb(181 101 29);
     margin: 0; /* Combined margin and padding into a single rule */
     padding: 0;
 }
@@ -22,7 +22,3 @@ h1 {
     overflow: hidden; /* Prevent scrolling */
 }
 
-#svgMapContainer svg {
-    display: block; /* Ensure it's not inline */
-    margin: auto;
-}
