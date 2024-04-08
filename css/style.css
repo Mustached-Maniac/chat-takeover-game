@@ -14,12 +14,13 @@ h1 {
     -webkit-text-fill-color: transparent;
 }
 
-/* Example for styling a state */
-/* Targeting a specific state by its ID */
-#svgMapContainer {
-    width: 100%; /* or a specific pixel width */
-    height: 500px; /* Adjust as needed */
+#svgMapContainer svg {
+    width: 100vw; /* Fill the entire width of the viewport */
+    height: 100vh; /* Fill the entire height of the viewport */
+    viewBox: "0 0 1000 589"; /* Set the viewBox attribute to match the original dimensions */
     display: block; /* Ensure it's not inline */
 }
 
-
+.enlarged-state {
+    transform-origin: top left;
+}
