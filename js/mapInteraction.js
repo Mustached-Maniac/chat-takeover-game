@@ -4,7 +4,6 @@ let endPlace = null; // Variable to store the ending place
 // Function to load the SVG map and add it to the HTML document
 function loadSVGMap() {
     const svgContainer = document.getElementById('svgMapContainer');
-    // Adjusted path to reference SVG file from the "assets" folder, considering the location of the JavaScript file in the "js" folder
     const svgURL = 'assets/Full_US_Map.svg';
 
     fetch(svgURL)

@@ -2,8 +2,10 @@
 
 body {
     text-align: center;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Montserrat', sans-serif; /* Changed font-family to Montserrat */
     background-color: #f0f0f0;
+    margin: 0; /* Combined margin and padding into a single rule */
+    padding: 0;
 }
 
 h1 {
@@ -14,13 +16,13 @@ h1 {
     -webkit-text-fill-color: transparent;
 }
 
-#svgMapContainer svg {
-    width: 100vw; /* Fill the entire width of the viewport */
-    height: 100vh; /* Fill the entire height of the viewport */
-    viewBox: "0 0 1000 589"; /* Set the viewBox attribute to match the original dimensions */
-    display: block; /* Ensure it's not inline */
+#svgMapContainer {
+    width: 100vw; /* Take up the entire width of the viewport */
+    height: 100vh; /* Calculate the height based on the aspect ratio (1000:589) */
+    overflow: hidden; /* Prevent scrolling */
 }
 
-.enlarged-state {
-    transform-origin: top left;
+#svgMapContainer svg {
+    display: block; /* Ensure it's not inline */
+    margin: auto;
 }
