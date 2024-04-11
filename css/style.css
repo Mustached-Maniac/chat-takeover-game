@@ -1,4 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap');
+@font-face {
+    font-family: 'Twitch Font';
+    src: url('../assets/Twitchy.TV.ttf') format('truetype');
+    /* Adjust the path to the font file based on the folder structure */
+}
 
 body {
     margin: 0;
@@ -16,24 +20,42 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    justify-content: space-between;
+    display: flex;
     align-items: center;
     padding: 0 20px;
-    box-sizing: border-box;
     z-index: -1; /* Initially set to a value lower than other elements */
 }
 
-h1 {
-    font-size: 60px;
-    color: #9147ff;
-    font-family: 'Montserrat', sans-serif;
-    text-shadow: 1px 1px 0 #ab85ff, 2px 2px 0 #c49bff, 3px 3px 0 #ddc2ff, 4px 4px 0 #e7d5ff, 5px 5px 0 #f0e9ff, 6px 6px 2px rgba(0, 0, 0, 0.4), 0 0 5px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.05), 0 0 15px rgba(0, 0, 0, 0.05), 0 0 20px rgba(0, 0, 0, 0.05);
-    background: -webkit-linear-gradient(45deg, #9147ff, #772ce8);
-    -webkit-text-fill-color: transparent;
-    margin: 0;
-    padding: 0;
+#selectPlacesContainer path {
+    fill: red; /* Example styling to make the selected states visible */
+}
+
+#pageTitle {
+    font-size: 60px; /* Initial font size */
+    color: #ffffff; /* White text color */
+    font-family: 'Twitch Font', sans-serif;
     text-align: center;
+    white-space: nowrap; /* Prevent text wrapping */
+    overflow: hidden; /* Hide overflow text */
+}
+
+#pageTitle::before,
+#pageTitle::after {
+    content: ''; /* Create pseudo-elements for alignment */
+    display: inline-block;
+    width: 15%; /* Fill half of the remaining space on each side */
+    height: 1px; /* Adjust as needed */
+    background-color: transparent; /* Match background color */
+    pointer-events: none; /* Ignore pointer events */
+}
+h1 {
+    margin: -50px;
+    color: #ffffff; /* White text color */
+    font-family: 'Twitch Font', sans-serif;
+    text-align: center;
+    text-shadow: 
+        -3px -3px 0 #9147ff,    /* Top left shadow */
+         3px -3px 0 #9147ff,    /* Top right shadow */
+        -3px  12px 0 #9147ff, /* Bottom left shadow with spread */
+         3px  6px 0 #9147ff;  /* Bottom right shadow with spread */
 }
