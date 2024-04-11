@@ -80,14 +80,16 @@ let startPlace = null; // Variable to store the start place state
         startPlace.setAttribute('transform', '');
         endPlace.setAttribute('transform', '');
     
-        // Append startPlace and endPlace back to their original parent containers
-        startPlace.parentNode.appendChild(startPlace);
-        endPlace.parentNode.appendChild(endPlace);
+        // Remove clones of startPlace and endPlace from the selectPlacesContainer
+        const selectedPlaces = selectPlacesContainer.querySelectorAll('path');
+        selectedPlaces.forEach(place => {
+            selectPlacesContainer.removeChild(place);
+        });
     
         // Reset variables
         startPlace = null;
         endPlace = null;
     }
-    
+   
     // Load the SVG map when the document is ready
     document.addEventListener('DOMContentLoaded', loadSVGMap);
