@@ -57,7 +57,6 @@ function initializeStateInteractions() {
             }
         });
     });
-
     // Add click event listener to selectPlacesContainer to reset selected states
     selectPlacesContainer.addEventListener('click', () => {
         resetPlaces();
@@ -67,27 +66,36 @@ function initializeStateInteractions() {
 }
 
 function enlargeAndMoveToBox(state, boxPosition) {
-    const svgContainer = document.getElementById('svgMapContainer');
-    const svgElement = svgContainer.querySelector('svg');
-    const svgWidth = svgElement.clientWidth;
-    const svgHeight = svgElement.clientHeight;
+    const containerWidth = window.innerWidth;
+    const containerHeight = window.innerHeight;
 
-    const availableWidth = svgWidth / 2 - 40; // Subtracting margins
-    const availableHeight = svgHeight;
+    // Set the scale factor
+    const scale = 2;
 
-    const boxMargin = 20; // Margin between boxes
-    const boxWidth = (availableWidth - boxMargin) / 2; // Width of the box
+    // Calculate the position of the state within the container
+    let stateX, stateY;
 
-    // Enlarge and move the state
     if (boxPosition === 'left') {
-        const stateX = (svgWidth / 2 - availableWidth) / 2; // Calculate X position for the left box
-        const stateY = svgHeight / 2; // Y position is centered
-        state.setAttribute('transform', `scale(2) translate(${stateX}, ${stateY})`);
+        stateX = containerWidth / 4; // 25% from the left edge of the viewport
     } else if (boxPosition === 'right') {
-        const stateX = svgWidth / 2 + (svgWidth / 2 - availableWidth) / 2; // Calculate X position for the right box
-        const stateY = svgHeight / 2; // Y position is centered
-        state.setAttribute('transform', `scale(2) translate(${stateX}, ${stateY})`);
+        stateX = (containerWidth * 3) / 4; // 75% from the left edge of the viewport
     }
+
+    stateY = containerHeight / 2; // Center vertically
+
+    // Get the current transformation
+    let currentTransform = state.getAttribute('transform');
+
+    // Check if the current transform is null
+    if (!currentTransform) {
+        currentTransform = ''; // Set it to an empty string
+    }
+
+    // Append the new transformation to the existing one
+    currentTransform += ` scale(${scale}) translate(${stateX}, ${stateY})`;
+
+    // Set the updated transformation for the state element
+    state.setAttribute('transform', currentTransform);
 }
 
 function resetPlaces() {
