@@ -11,13 +11,14 @@ body {
 }
 
 #svgMapContainer {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+    position: absolute;
+    width: 100%;
+    height: 100%;
 }
 
 #selectPlacesContainer {
     visibility: visible;
+    overflow: visible;
     position: absolute;
     top: 0;
     left: 0;
@@ -28,6 +29,7 @@ body {
     padding: 0 20px;
     z-index: -1; /* Initially set to a value lower than other elements */
 }
+
 
 #selectPlacesContainer path {
     fill: red !important; /* Example styling to make the selected states visible */
