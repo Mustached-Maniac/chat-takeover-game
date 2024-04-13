@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
-************* Copyright (c) 2017 Pareto Softare, LLC DBA Simplemaps.com *******************		
-************* Free for Commercial Use, full terms at  http://simplemaps.com/resources/svg-license ************
-************* Attribution is appreciated! http://simplemaps.com ***************************
--->
 
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -14,12 +9,12 @@
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    enable_background="new 0 0 1000 589"
-   height="100%"
+   height="589"
    pretty_print="False"
    style="stroke-linejoin: round; stroke:#000; fill: none;"
    version="1.1"
    viewBox="0 0 1000 589"
-   width="100%"
+   width="1000"
    id="svg"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="us.svg">

@@ -1,7 +1,6 @@
 @font-face {
     font-family: 'Twitch Font';
     src: url('../assets/Twitchy.TV.ttf') format('truetype');
-    /* Adjust the path to the font file based on the folder structure */
 }
 
 body {
@@ -11,56 +10,59 @@ body {
 }
 
 #svgMapContainer {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-#selectPlacesContainer {
-    visibility: visible;
-    overflow: visible;
-    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed; /* Changed from absolute to fixed */
     top: 0;
     left: 0;
-    width: 100%; /* Set width to 100% */
-    height: 100%; /* Set height to 100% */
-    display: flex;
-    align-items: center;
-    padding: 0 20px;
-    z-index: -1; /* Initially set to a value lower than other elements */
+    right: 0; /* Added to ensure full width */
+    bottom: 0; /* Added to ensure full height */
+    overflow: hidden; /* Hides any overflow */
 }
 
+#svgMapContainer svg {
+    width: 100vw; /* Responsive width */
+    height: 100vh; /* Responsive height */
+    max-width: 1920px; /* Maximum width */
+    max-height: 1080px; /* Maximum height */
+    margin: auto; /* Centers within the flex container */
+}
 
-#selectPlacesContainer path {
-    fill: red !important; /* Example styling to make the selected states visible */
+path {
+    transition: transform 0.5s ease, fill 0.5s ease;  /* Smooth transformation and color transition */
+}
+
+path.selected {
+    fill: red;
 }
 
 #pageTitle {
-    font-size: 60px; /* Initial font size */
-    color: #ffffff; /* White text color */
+    font-size: 60px;
+    color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;
-    white-space: nowrap; /* Prevent text wrapping */
-    overflow: hidden; /* Hide overflow text */
+    white-space: nowrap;
+    overflow: hidden;
 }
 
-#pageTitle::before,
-#pageTitle::after {
-    content: ''; /* Create pseudo-elements for alignment */
+#pageTitle::before, #pageTitle::after {
+    content: '';
     display: inline-block;
-    width: 15%; /* Fill half of the remaining space on each side */
-    height: 1px; /* Adjust as needed */
-    background-color: transparent; /* Match background color */
-    pointer-events: none; /* Ignore pointer events */
+    width: 15%;
+    height: 1px;
+    background-color: transparent;
+    pointer-events: none;
 }
+
 h1 {
     margin: -50px;
-    color: #ffffff; /* White text color */
+    color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;
     text-shadow: 
-        -3px -3px 0 #9147ff,    /* Top left shadow */
-         3px -3px 0 #9147ff,    /* Top right shadow */
-        -3px  12px 0 #9147ff, /* Bottom left shadow with spread */
-         3px  6px 0 #9147ff;  /* Bottom right shadow with spread */
+        -3px -3px 0 #9147ff,
+        3px -3px 0 #9147ff,
+        -3px 12px 0 #9147ff,
+        3px 6px 0 #9147ff;
 }

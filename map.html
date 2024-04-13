@@ -1,44 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Streamer vs. Twitch Chat</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/mapInteraction.js" defer></script>
 </head>
 <body>
     <h1 id="pageTitle">Streamer vs. Twitch Chat</h1>
-    <div id="svgMapContainer"></div>
-    <div id="selectPlacesContainer"></div>
-
-    <script>
-        // Get the header element
-        const header = document.getElementById('pageTitle');
-
-        // Function to resize the font size dynamically
-        function resizeHeaderFont() {
-            // Get the SVG container width
-            const svgContainer = document.getElementById('svgMapContainer');
-            const svgWidth = svgContainer.clientWidth;
-
-            // Set the maximum font size
-            const maxWidth = svgWidth * 1; // Adjust the factor as needed
-
-            // Get the text length
-            const textLength = header.textContent.length;
-
-            // Calculate the font size based on the width and text length
-            const fontSize = Math.min(maxWidth / textLength, maxWidth);
-
-            // Set the font size
-            header.style.fontSize = `${fontSize}px`;
-        }
-
-        // Call the resize function when the window is resized
-        window.addEventListener('resize', resizeHeaderFont);
-
-        // Call the resize function initially
-        resizeHeaderFont();
-    </script>
+    <div id="svgMapContainer"></div> 
+   <script src=""js/headerSize.js"></script>
 </body>
 </html>
