@@ -40,6 +40,10 @@ path.selected {
     fill: red;
 }
 
+.blur {
+    filter: blur(4px);
+  }
+  
 #pageTitle {
     color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
@@ -64,7 +68,7 @@ path.selected {
 }
 
 h1 {
-    margin: 0; /* Removed negative margin */
+    margin: 0; 
     color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;
