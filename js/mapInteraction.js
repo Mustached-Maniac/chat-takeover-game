@@ -15,16 +15,17 @@ function loadSVGMap() {
 
 function initializeStateInteractions() {
     const svgContainer = document.getElementById('svgMapContainer');
-    
+
     // Use event delegation for path clicks
     svgContainer.addEventListener('click', function(event) {
         let target = event.target;
-        
+        console.log('Clicked on:', target.tagName, 'with id:', target.id);
+
         // Proceed only if a path was clicked
         if (target.tagName !== 'path') {
             return;
         }
-        
+
         // If the path is already the startPlace or endPlace, reset it
         if (target === startPlace || target === endPlace) {
             resetState(target);
@@ -46,26 +47,41 @@ function initializeStateInteractions() {
 function setTransform(element, position) {
     const svgContainer = document.getElementById('svgMapContainer');
     const svgRect = svgContainer.getBoundingClientRect();
-    const scale = 2;  // The scale factor for enlargement
+    const scale = 2; // The scale factor for enlargement
 
-    // Reset transformations to get the unscaled bounding box
+    // Remove any existing transformations to get the true position
     element.style.transform = '';
+
+    // Get the position of the element within the SVG
     const bbox = element.getBBox();
 
-    // Calculate the new center position after scaling
-    const centerX = (bbox.x + bbox.width / 2) * scale;
-    const centerY = (bbox.y + bbox.height / 2) * scale;
+    // Fixed positions in the SVG container
+    const fixedPositions = {
+        left: { x: svgRect.width * 0.15, y: svgRect.height * 0.5 },
+        right: { x: svgRect.width * 0.55, y: svgRect.height * 0.5 }
+    };
 
-    // Determine the offset to position the center of the element at the desired point
-    // taking into account the element's current position on the screen
-    const elementRect = element.getBoundingClientRect();
-    const offsetX = (position === 'left' ? svgRect.left + svgRect.width * 0.35 : svgRect.right - svgRect.width * 0.35) - (elementRect.left + elementRect.width / 2);
-    const offsetY = svgRect.top + svgRect.height / 2 - (elementRect.top + elementRect.height / 2);
+    // Calculate the center of the state element
+    const elementCenterX = bbox.x + bbox.width / 2;
+    const elementCenterY = bbox.y + bbox.height / 2;
 
-    // Apply the new transformation
+    // Calculate the difference from the center of the state to the fixed position
+    let offsetX, offsetY;
+    if (position === 'left') {
+        offsetX = fixedPositions.left.x - elementCenterX;
+        offsetY = fixedPositions.left.y - elementCenterY;
+    } else { // 'right'
+        offsetX = fixedPositions.right.x - elementCenterX;
+        offsetY = fixedPositions.right.y - elementCenterY;
+    }
+
+    // Apply the transformation with scale
     element.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-    element.style.transformOrigin = 'center center';
-    element.style.fill = 'red';
+    element.style.transformOrigin = `${elementCenterX}px ${elementCenterY}px`;
+    element.style.fill = 'red'; // Set distinct color on active
+
+    // Log for debugging
+    console.log('Transform applied to ' + (position === 'left' ? 'startPlace' : 'endPlace') + ':', element.style.transform);
 
     // Set the transition to ensure smooth movement
     element.style.transition = 'transform 0.5s ease, fill 0.5s ease';
@@ -75,18 +91,19 @@ function setTransform(element, position) {
 }
 
 function resetState(element) {
+    console.log('Resetting element:', element);
+
     element.style.transition = 'none';
     element.style.transform = '';
-    element.style.fill = '';
-    // Remove the transition style after the transform to ensure it can be reapplied later
+    element.style.fill = 'blue';  // Change to another distinct color on reset
+
     setTimeout(() => {
         element.style.transition = '';
     }, 0);
+
+    // Log after reset
+    const resetBBox = element.getBBox();
+    console.log('Reset BBox:', resetBBox);
 }
 
-function resetState(element) {
-    element.classList.remove('selected');
-    element.style.transform = '';
-    element.style.fill = '';
-}
 document.addEventListener('DOMContentLoaded', loadSVGMap);

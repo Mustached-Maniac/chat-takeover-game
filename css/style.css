@@ -3,10 +3,13 @@
     src: url('../assets/Twitchy.TV.ttf') format('truetype');
 }
 
-body {
+body, html {
+    width: 100%; /* Ensure the body and html take the full viewport width */
+    height: 100%; /* Ensure the body and html take the full viewport height */
     margin: 0;
-    padding: 0;
+    padding-top: 50;
     background-color: hwb(181 101 29);
+    overflow-x: hidden; /* Hide horizontal scrollbar */
 }
 
 #svgMapContainer {
@@ -14,7 +17,7 @@ body {
     justify-content: center;
     align-items: center;
     position: fixed; /* Changed from absolute to fixed */
-    top: 0;
+    top: 50px;
     left: 0;
     right: 0; /* Added to ensure full width */
     bottom: 0; /* Added to ensure full height */
@@ -30,7 +33,7 @@ body {
 }
 
 path {
-    transition: transform 0.5s ease, fill 0.5s ease;  /* Smooth transformation and color transition */
+    transition: transform 0.5s ease, fill 0.5s ease; /* Smooth transformation and color transition */
 }
 
 path.selected {
@@ -38,12 +41,17 @@ path.selected {
 }
 
 #pageTitle {
-    font-size: 60px;
     color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
+    position: absolute;
+    width: 100%; /* Take the full width of the viewport */
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto; /* Center the text horizontally */
 }
 
 #pageTitle::before, #pageTitle::after {
@@ -56,7 +64,7 @@ path.selected {
 }
 
 h1 {
-    margin: -50px;
+    margin: 0; /* Removed negative margin */
     color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;
