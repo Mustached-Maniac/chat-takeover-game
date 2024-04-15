@@ -39,10 +39,15 @@ function bindEvents() {
 
 function handleSVGMapInteraction(wsdata) {
     if (wsdata.event.source === "General" && wsdata.event.type === "Custom") {
-        console.log("Custom WS Message:", wsdata);
+        let team = wsdata.data.currentTeam;  // 'team' should be either 'teamStreamer' or 'teamChat'
+        let startColor = mapState.teamColors[team];
+
         if (wsdata.data.startPlace) {
-            mapState.endPlaceIdentifier = wsdata.data.endPlace;
-            mapState.setPlace(wsdata.data.startPlace, 'start');
+            mapState.setPlace(wsdata.data.startPlace, 'start', startColor, wsdata.data.turnResult === "success", team);
+        }
+        if (wsdata.data.endPlace) {
+            let endColor = wsdata.data.turnResult === "success" ? startColor : mapState.teamColors.default;
+            mapState.setPlace(wsdata.data.endPlace, 'end', endColor, wsdata.data.turnResult === "success", team);
         }
     }
 }

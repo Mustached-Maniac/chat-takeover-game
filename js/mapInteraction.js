@@ -2,43 +2,74 @@ const mapState = {
     startPlace: null,
     endPlace: null,
     endPlaceIdentifier: null,
+    lastActionSuccessful: false,
+    currentTeam: null,
+    transformTimeoutId: null,
+    teamColors: {
+        teamStreamer: "#FF0000",
+        teamChat: "#39FF14",
+        default: "#EADDCA",
+    },
 
     findSvgElement: function(identifier) {
-        let element = document.getElementById(identifier);
-        if (element) return element;
-        element = document.querySelector(`[data-id="${identifier}"]`);
-        if (element) return element;
-        return document.querySelector(`[data-name="${identifier}"]`);
-    },
-
-    setPlace: function(identifier, type) {
-        const svgElement = this.findSvgElement(identifier);
-        if (svgElement) {
-            if (type === 'start') {
-                this.startPlace = svgElement;
-                setTransform(this.startPlace, 'left');
-                applyBlurEffect();
-                if (this.endPlaceIdentifier) {
-                    setTimeout(() => this.setPlace(this.endPlaceIdentifier, 'end'), 1000);
-                }
-            } else if (type === 'end') {
-                this.endPlace = svgElement;
-                setTransform(this.endPlace, 'right');
-                applyBlurEffect();
-                setTimeout(() => this.resetAllPlaces(), 5000);
-            }
-        } else {
-            console.error(`${type} place element not found:`, identifier);
+        let normalizedIdentifier = identifier.toUpperCase();
+    
+        let element = document.getElementById(normalizedIdentifier) ||
+                      document.querySelector(`[data-id="${normalizedIdentifier}"]`) ||
+                      document.querySelector(`[data-name="${identifier}"]`);  
+    
+        if (!element) {
+            console.error("Element not found for identifier:", identifier);
+            return null;
         }
+        return element;
     },
-
+      
+    setPlace: function(identifier, type, color, success, team) {
+        // Clear any previous transform timeouts
+        clearTimeout(this.transformTimeoutId);
+    
+        const svgElement = this.findSvgElement(identifier);
+        if (!svgElement) {
+            console.error(`${type} place element not found:`, identifier);
+            return;
+        }
+      
+        this.currentTeam = team;
+        this.lastActionSuccessful = success;
+    
+        if (type === 'start') {
+            this.startPlace = svgElement;
+            let startColor = this.teamColors[team]; 
+            setTransform(this.startPlace, 'left', startColor);
+        } else if (type === 'end') {
+            this.endPlace = svgElement;
+            setTransform(this.endPlace, 'right', this.teamColors.default);
+            this.transformTimeoutId = setTimeout(() => {
+                const reFetchedElement = this.findSvgElement(identifier);
+                if (!reFetchedElement) {
+                    console.error("Failed to re-fetch the element for transformation:", identifier);
+                    return;
+                }
+                setTransform(reFetchedElement, 'right', success ? color : this.teamColors.default);
+            }, 4000);
+        }
+        applyBlurEffect();
+        this.resetTimeoutId = setTimeout(() => this.resetAllPlaces(), 3000);
+    },
+ 
     resetAllPlaces: function() {
-        if (this.startPlace) resetState(this.startPlace);
-        if (this.endPlace) resetState(this.endPlace);
+        clearTimeout(this.transformTimeoutId); 
+        if (this.startPlace) {
+            resetState(this.startPlace, this.teamColors[this.currentTeam]);
+        }
+        if (this.endPlace) {
+            resetState(this.endPlace, this.lastActionSuccessful ? this.teamColors[this.currentTeam] : this.teamColors.default);
+        }
         this.startPlace = null;
         this.endPlace = null;
         applyBlurEffect();
-    }
+    },
 };
 
 function loadSVGMap() {
@@ -48,9 +79,12 @@ function loadSVGMap() {
         .then(response => response.text())
         .then(svgData => {
             svgContainer.innerHTML = svgData;
+            console.log("SVG loaded successfully");
             initializeStateInteractions();
         })
-        .catch(error => console.error('Error loading the SVG:', error));
+        .catch(error => {
+            console.error('Error loading the SVG:', error);
+        });
 }
 
 function initializeStateInteractions() {
@@ -60,41 +94,47 @@ function initializeStateInteractions() {
         if (target.tagName !== 'path') return;
 
         if (target === mapState.startPlace || target === mapState.endPlace) {
-            resetState(target);
+            resetState(target, mapState.teamColors.default); 
         } else {
             if (!mapState.startPlace) {
                 mapState.startPlace = target;
-                setTransform(mapState.startPlace, 'left');
+                setTransform(mapState.startPlace, 'left', mapState.teamColors.teamStreamer);
             } else if (!mapState.endPlace) {
                 mapState.endPlace = target;
-                setTransform(mapState.endPlace, 'right');
+                setTransform(mapState.endPlace, 'right', mapState.teamColors.default);
             }
             applyBlurEffect();
         }
     });
 }
 
-function setTransform(element, position) {
+function setTransform(element, position, color) {
+    if (!element) {
+        console.error("Attempted to transform a non-existent element.");
+        return;
+    }
+
     const svgContainer = document.getElementById('svgMapContainer');
     const svgRect = svgContainer.getBoundingClientRect();
-    const scale = 2; // The scale factor for enlargement
+    const scale = 2;
 
-    element.style.transform = '';
-    const bbox = element.getBBox();
-    const elementCenterX = bbox.x + bbox.width / 2;
-    const elementCenterY = bbox.y + bbox.height / 2;
     const fixedPositions = {
         left: { x: svgRect.width * 0.15, y: svgRect.height * 0.25 },
         right: { x: svgRect.width * 0.40, y: svgRect.height * 0.25 }
     };
+
+    const bbox = element.getBBox();
+    const elementCenterX = bbox.x + bbox.width / 2;
+    const elementCenterY = bbox.y + bbox.height / 2;
     const offsetX = position === 'left' ? fixedPositions.left.x - elementCenterX : fixedPositions.right.x - elementCenterX;
     const offsetY = position === 'left' ? fixedPositions.left.y - elementCenterY : fixedPositions.right.y - elementCenterY;
 
     element.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
     element.style.transformOrigin = `${elementCenterX}px ${elementCenterY}px`;
-    element.style.fill = position === 'left' ? 'red' : 'green';
+    element.style.fill = color;
     element.style.transition = 'transform 0.5s ease, fill 0.5s ease';
-    element.parentNode.appendChild(element);
+    element.style.opacity = "1.0";  // Ensure element is fully opaque
+    element.parentNode.appendChild(element); // This also helps in stacking context
 }
 
 function applyBlurEffect() {
@@ -112,18 +152,12 @@ function applyBlurEffect() {
     }
 }
 
-function resetState(element) {
-    element.style.transition = 'none';
+function resetState(element, color) {
+    element.style.transition = 'transform 0.5s ease, fill 0.5s ease';
     element.style.transform = '';
-    element.style.fill = 'blue';
+    element.style.fill = color; // Apply the final color based on whether the action was successful
     setTimeout(() => {
-        element.style.transition = '';
-        const resetBBox = element.getBBox();
-        if (element === mapState.startPlace) {
-            mapState.startPlace = null;
-        } else if (element === mapState.endPlace) {
-            mapState.endPlace = null;
-        }
+        element.style.transition = ''; // Ensure smooth transition
         applyBlurEffect();
     }, 0);
 }
