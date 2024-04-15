@@ -1,5 +1,45 @@
-let startPlace = null;
-let endPlace = null;
+const mapState = {
+    startPlace: null,
+    endPlace: null,
+    endPlaceIdentifier: null,
+
+    findSvgElement: function(identifier) {
+        let element = document.getElementById(identifier);
+        if (element) return element;
+        element = document.querySelector(`[data-id="${identifier}"]`);
+        if (element) return element;
+        return document.querySelector(`[data-name="${identifier}"]`);
+    },
+
+    setPlace: function(identifier, type) {
+        const svgElement = this.findSvgElement(identifier);
+        if (svgElement) {
+            if (type === 'start') {
+                this.startPlace = svgElement;
+                setTransform(this.startPlace, 'left');
+                applyBlurEffect();
+                if (this.endPlaceIdentifier) {
+                    setTimeout(() => this.setPlace(this.endPlaceIdentifier, 'end'), 1000);
+                }
+            } else if (type === 'end') {
+                this.endPlace = svgElement;
+                setTransform(this.endPlace, 'right');
+                applyBlurEffect();
+                setTimeout(() => this.resetAllPlaces(), 5000);
+            }
+        } else {
+            console.error(`${type} place element not found:`, identifier);
+        }
+    },
+
+    resetAllPlaces: function() {
+        if (this.startPlace) resetState(this.startPlace);
+        if (this.endPlace) resetState(this.endPlace);
+        this.startPlace = null;
+        this.endPlace = null;
+        applyBlurEffect();
+    }
+};
 
 function loadSVGMap() {
     const svgContainer = document.getElementById('svgMapContainer');
@@ -15,26 +55,22 @@ function loadSVGMap() {
 
 function initializeStateInteractions() {
     const svgContainer = document.getElementById('svgMapContainer');
-
     svgContainer.addEventListener('click', function(event) {
         let target = event.target;
+        if (target.tagName !== 'path') return;
 
-        if (target.tagName !== 'path') {
-            return;
-        }
-
-        if (target === startPlace || target === endPlace) {
+        if (target === mapState.startPlace || target === mapState.endPlace) {
             resetState(target);
         } else {
-            if (!startPlace) {
-                startPlace = target;
-                setTransform(startPlace, 'left');
-            } else if (!endPlace) {
-                endPlace = target;
-                setTransform(endPlace, 'right');
+            if (!mapState.startPlace) {
+                mapState.startPlace = target;
+                setTransform(mapState.startPlace, 'left');
+            } else if (!mapState.endPlace) {
+                mapState.endPlace = target;
+                setTransform(mapState.endPlace, 'right');
             }
+            applyBlurEffect();
         }
-        applyBlurEffect(); // Call this to manage blur state
     });
 }
 
@@ -51,16 +87,9 @@ function setTransform(element, position) {
         left: { x: svgRect.width * 0.15, y: svgRect.height * 0.25 },
         right: { x: svgRect.width * 0.40, y: svgRect.height * 0.25 }
     };
-    let offsetX, offsetY;
-    if (position === 'left') {
-        offsetX = fixedPositions.left.x - elementCenterX;
-        offsetY = fixedPositions.left.y - elementCenterY;
-    } else { // 'right'
-        offsetX = fixedPositions.right.x - elementCenterX;
-        offsetY = fixedPositions.right.y - elementCenterY;
-    }
-    
-    // Apply the transformation with scale
+    const offsetX = position === 'left' ? fixedPositions.left.x - elementCenterX : fixedPositions.right.x - elementCenterX;
+    const offsetY = position === 'left' ? fixedPositions.left.y - elementCenterY : fixedPositions.right.y - elementCenterY;
+
     element.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
     element.style.transformOrigin = `${elementCenterX}px ${elementCenterY}px`;
     element.style.fill = position === 'left' ? 'red' : 'green';
@@ -70,15 +99,15 @@ function setTransform(element, position) {
 
 function applyBlurEffect() {
     const paths = document.querySelectorAll('#svgMapContainer path');
-    if (startPlace && endPlace) {
-        paths.forEach(path => {
-            if (path !== startPlace && path !== endPlace) {
-                path.classList.add('blur');
-            }
-        });
+    if (!mapState.startPlace && !mapState.endPlace) {
+        paths.forEach(path => path.classList.remove('blur'));
     } else {
         paths.forEach(path => {
-            path.classList.remove('blur');
+            if (path !== mapState.startPlace && path !== mapState.endPlace) {
+                path.classList.add('blur');
+            } else {
+                path.classList.remove('blur');
+            }
         });
     }
 }
@@ -87,19 +116,14 @@ function resetState(element) {
     element.style.transition = 'none';
     element.style.transform = '';
     element.style.fill = 'blue';
-
     setTimeout(() => {
         element.style.transition = '';
         const resetBBox = element.getBBox();
-        console.log('Reset BBox:', resetBBox);
-
-        if (element === startPlace) {
-            startPlace = null;
-        } else if (element === endPlace) {
-            endPlace = null;
+        if (element === mapState.startPlace) {
+            mapState.startPlace = null;
+        } else if (element === mapState.endPlace) {
+            mapState.endPlace = null;
         }
-
-        // Now check if blur should be applied or removed
         applyBlurEffect();
     }, 0);
 }
