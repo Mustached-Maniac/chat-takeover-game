@@ -114,6 +114,18 @@ function setTransform(element, position, color) {
         return;
     }
 
+    // Reset the transition to prevent any CSS transition for initial color set
+    element.style.transition = 'none';
+    element.style.fill = color;  // Set color without transition
+
+    // Force reflow to apply the fill color instantly before transitioning
+    element.getBoundingClientRect();
+
+    // Now set up the transition for the transform property only
+    element.style.transition = 'transform 0.5s ease';
+    element.style.opacity = "1.0";  // Ensure element is fully opaque
+
+    // Calculate the transform values
     const svgContainer = document.getElementById('svgMapContainer');
     const svgRect = svgContainer.getBoundingClientRect();
     const scale = 2;
@@ -129,11 +141,12 @@ function setTransform(element, position, color) {
     const offsetX = position === 'left' ? fixedPositions.left.x - elementCenterX : fixedPositions.right.x - elementCenterX;
     const offsetY = position === 'left' ? fixedPositions.left.y - elementCenterY : fixedPositions.right.y - elementCenterY;
 
-    element.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-    element.style.transformOrigin = `${elementCenterX}px ${elementCenterY}px`;
-    element.style.fill = color;
-    element.style.transition = 'transform 0.5s ease, fill 0.5s ease';
-    element.style.opacity = "1.0";  // Ensure element is fully opaque
+    // Apply the transform with the transition
+    setTimeout(() => {
+        element.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+        element.style.transformOrigin = `${elementCenterX}px ${elementCenterY}px`;
+    }, 0); // The timeout ensures the transition takes effect after reflow
+
     element.parentNode.appendChild(element); // This also helps in stacking context
 }
 
@@ -155,9 +168,9 @@ function applyBlurEffect() {
 function resetState(element, color) {
     element.style.transition = 'transform 0.5s ease, fill 0.5s ease';
     element.style.transform = '';
-    element.style.fill = color; // Apply the final color based on whether the action was successful
+    element.style.fill = color;
     setTimeout(() => {
-        element.style.transition = ''; // Ensure smooth transition
+        element.style.transition = '';
         applyBlurEffect();
     }, 0);
 }
