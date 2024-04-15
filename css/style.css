@@ -7,7 +7,7 @@ body, html {
     width: 100%; /* Ensure the body and html take the full viewport width */
     height: 100%; /* Ensure the body and html take the full viewport height */
     margin: 0;
-    padding-top: 50;
+    padding: 0;
     background-color: hwb(181 101 29);
     overflow-x: hidden; /* Hide horizontal scrollbar */
 }
@@ -17,7 +17,6 @@ body, html {
     justify-content: center;
     align-items: center;
     position: fixed; /* Changed from absolute to fixed */
-    top: 50px;
     left: 0;
     right: 0; /* Added to ensure full width */
     bottom: 0; /* Added to ensure full height */
@@ -41,34 +40,36 @@ path.selected {
 }
 
 .blur {
-    filter: blur(4px);
+    filter: blur(6px);
   }
-  
-#pageTitle {
+
+  #pageTitle {
     color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
-    position: absolute;
-    width: 100%; /* Take the full width of the viewport */
-    top: 0;
-    left: 0;
-    right: 0;
+    position: fixed;
+    top: -60px; /* Stay at the top */
+    left: 50%; /* Center the header */
+    transform: translateX(-50%);
+    z-index: 10; /* Ensure it stays above other content */
+    max-width: 1920px; /* Maximum width for the header */
+    font-size: 60px; /* Set an initial font size */
     margin: 0 auto; /* Center the text horizontally */
 }
 
 #pageTitle::before, #pageTitle::after {
     content: '';
     display: inline-block;
-    width: 15%;
+    width: 10px;
     height: 1px;
     background-color: transparent;
     pointer-events: none;
 }
 
 h1 {
-    margin: 0; 
+    margin-top: 1em; /* Adjust top margin to give some space from the top edge */
     color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;

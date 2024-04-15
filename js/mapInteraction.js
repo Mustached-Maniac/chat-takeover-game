@@ -48,8 +48,8 @@ function setTransform(element, position) {
     const elementCenterX = bbox.x + bbox.width / 2;
     const elementCenterY = bbox.y + bbox.height / 2;
     const fixedPositions = {
-        left: { x: svgRect.width * 0.15, y: svgRect.height * 0.5 },
-        right: { x: svgRect.width * 0.55, y: svgRect.height * 0.5 }
+        left: { x: svgRect.width * 0.15, y: svgRect.height * 0.25 },
+        right: { x: svgRect.width * 0.40, y: svgRect.height * 0.25 }
     };
     let offsetX, offsetY;
     if (position === 'left') {

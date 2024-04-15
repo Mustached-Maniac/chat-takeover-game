@@ -1,13 +1,12 @@
 function resizeHeaderFont() {
-    const svgContainer = document.getElementById('svgMapContainer');
-    const svgWidth = svgContainer.clientWidth;
-    
-    // Use a starting font size and then reduce it until the header no longer causes a scrollbar
-    let fontSize = 240; // Start with a high value that you reduce
-    header.style.fontSize = `${fontSize}px`;
+    const maxWidth = 1920; // Set the max width for the header text
+    const header = document.getElementById('pageTitle'); // Ensure you have this reference
+    const minFontSize = 72; // Set a comfortable minimum font size
 
-    // Check if the header is causing a scrollbar and reduce font size until it doesn't
-    while (header.scrollWidth > svgWidth && fontSize > 0) {
+    let fontSize = parseInt(window.getComputedStyle(header).fontSize, 10);
+
+    // Only scale down if necessary
+    while (header.scrollWidth > maxWidth && fontSize > minFontSize) {
         fontSize--;
         header.style.fontSize = `${fontSize}px`;
     }
