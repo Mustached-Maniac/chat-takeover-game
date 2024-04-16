@@ -11,22 +11,21 @@ const mapState = {
         default: "#EADDCA",
     },
 
-    findSvgElement: function(identifier) {
+    findSvgElement: function (identifier) {
         let normalizedIdentifier = identifier.toUpperCase();
-    
+
         let element = document.getElementById(normalizedIdentifier) ||
-                      document.querySelector(`[data-id="${normalizedIdentifier}"]`) ||
-                      document.querySelector(`[data-name="${identifier}"]`);  
-    
+            document.querySelector(`[data-id="${normalizedIdentifier}"]`) ||
+            document.querySelector(`[data-name="${identifier}"]`);
+
         if (!element) {
             console.error("Element not found for identifier:", identifier);
             return null;
         }
         return element;
     },
-      
+
     setPlace: function(identifier, type, color, success, team) {
-        // Clear any previous transform timeouts
         clearTimeout(this.transformTimeoutId);
     
         const svgElement = this.findSvgElement(identifier);
@@ -34,42 +33,51 @@ const mapState = {
             console.error(`${type} place element not found:`, identifier);
             return;
         }
-      
+    
         this.currentTeam = team;
         this.lastActionSuccessful = success;
     
         if (type === 'start') {
             this.startPlace = svgElement;
-            let startColor = this.teamColors[team]; 
+            let startColor = this.teamColors[team];
             setTransform(this.startPlace, 'left', startColor);
         } else if (type === 'end') {
             this.endPlace = svgElement;
-            setTransform(this.endPlace, 'right', this.teamColors.default);
-            this.transformTimeoutId = setTimeout(() => {
-                const reFetchedElement = this.findSvgElement(identifier);
-                if (!reFetchedElement) {
-                    console.error("Failed to re-fetch the element for transformation:", identifier);
-                    return;
-                }
-                setTransform(reFetchedElement, 'right', success ? color : this.teamColors.default);
-            }, 4000);
+            let currentColor = this.endPlace.style.fill;
+            let isDefaultOrBackground = !currentColor || currentColor === this.teamColors.default || currentColor === "rgb(249, 249, 249)";
+            let initialEndColor = isDefaultOrBackground ? this.teamColors.default : currentColor;
+    
+            this.endPlace.style.fill = initialEndColor;
+            setTransform(this.endPlace, 'right', initialEndColor);
+    
+            if (success) {
+                this.transformTimeoutId = setTimeout(() => {
+                    const reFetchedElement = this.findSvgElement(identifier);
+                    if (!reFetchedElement) {
+                        console.error("Failed to re-fetch the element for transformation:", identifier);
+                        return;
+                    }
+                    setTransform(reFetchedElement, 'right', color);
+                }, 4000);
+            }
         }
         applyBlurEffect();
         this.resetTimeoutId = setTimeout(() => this.resetAllPlaces(), 3000);
     },
- 
+     
     resetAllPlaces: function() {
-        clearTimeout(this.transformTimeoutId); 
+        clearTimeout(this.transformTimeoutId);
         if (this.startPlace) {
             resetState(this.startPlace, this.teamColors[this.currentTeam]);
         }
         if (this.endPlace) {
-            resetState(this.endPlace, this.lastActionSuccessful ? this.teamColors[this.currentTeam] : this.teamColors.default);
+            let colorForReset = this.lastActionSuccessful ? this.teamColors[this.currentTeam] : this.endPlace.style.fill;
+            resetState(this.endPlace, colorForReset);
         }
         this.startPlace = null;
         this.endPlace = null;
         applyBlurEffect();
-    },
+    },    
 };
 
 function loadSVGMap() {
@@ -89,12 +97,12 @@ function loadSVGMap() {
 
 function initializeStateInteractions() {
     const svgContainer = document.getElementById('svgMapContainer');
-    svgContainer.addEventListener('click', function(event) {
+    svgContainer.addEventListener('click', function (event) {
         let target = event.target;
         if (target.tagName !== 'path') return;
 
         if (target === mapState.startPlace || target === mapState.endPlace) {
-            resetState(target, mapState.teamColors.default); 
+            resetState(target, mapState.teamColors.default);
         } else {
             if (!mapState.startPlace) {
                 mapState.startPlace = target;
@@ -114,18 +122,16 @@ function setTransform(element, position, color) {
         return;
     }
 
-    // Reset the transition to prevent any CSS transition for initial color set
     element.style.transition = 'none';
-    element.style.fill = color;  // Set color without transition
+    element.style.fill = color;
 
-    // Force reflow to apply the fill color instantly before transitioning
     element.getBoundingClientRect();
 
-    // Now set up the transition for the transform property only
-    element.style.transition = 'transform 0.5s ease';
-    element.style.opacity = "1.0";  // Ensure element is fully opaque
 
-    // Calculate the transform values
+    element.style.transition = 'transform 0.5s ease';
+    element.style.opacity = "1.0";
+
+
     const svgContainer = document.getElementById('svgMapContainer');
     const svgRect = svgContainer.getBoundingClientRect();
     const scale = 2;
@@ -141,13 +147,13 @@ function setTransform(element, position, color) {
     const offsetX = position === 'left' ? fixedPositions.left.x - elementCenterX : fixedPositions.right.x - elementCenterX;
     const offsetY = position === 'left' ? fixedPositions.left.y - elementCenterY : fixedPositions.right.y - elementCenterY;
 
-    // Apply the transform with the transition
+
     setTimeout(() => {
         element.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
         element.style.transformOrigin = `${elementCenterX}px ${elementCenterY}px`;
-    }, 0); // The timeout ensures the transition takes effect after reflow
+    }, 0);
 
-    element.parentNode.appendChild(element); // This also helps in stacking context
+    element.parentNode.appendChild(element);
 }
 
 function applyBlurEffect() {
@@ -166,6 +172,7 @@ function applyBlurEffect() {
 }
 
 function resetState(element, color) {
+    console.log(`Resetting state for element with new color: ${color}`); // Debug output
     element.style.transition = 'transform 0.5s ease, fill 0.5s ease';
     element.style.transform = '';
     element.style.fill = color;
