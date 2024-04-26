@@ -14,9 +14,9 @@ Brain dump for ideas/items needing to be tidied up.
  - [ ] Add on-screen polling (2-5 options) *will require move source in OBS*
     - [ ] pass poll result as teamChat prompt
  - [ ] Add Set-Up Action
-    - [ ] Store API key if don't already have one
-    - [ ] Set streamer/chat team colors
-    - [ ] Set streamer/chat starting states
+    - [x] Store API key if don't already have one
+    - [x] Set streamer/chat team colors
+    - [x] Set streamer/chat starting states
     - [ ] Toggle for TTS (would require a global bool to check in main action)
  - [ ] Store win/loss record for Broadcaster and each user who played (participated in at least X polls)
     - [ ] Requires creating a group / adding players once voteCount > X
@@ -25,7 +25,7 @@ Brain dump for ideas/items needing to be tidied up.
     - [ ] Case statements to send "narrative" to correct chat based on how received
  
  ### Commands
- - [ ] Initialization
+ - [ ] Initialization (may not be required, just use start game)
  - [ ] Start Game
  - [ ] Make Move (streamer / chat separate)
  - [ ] Current "ownership" percentages
