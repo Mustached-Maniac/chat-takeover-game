@@ -10,6 +10,10 @@ const mapState = {
         teamChat: "#39FF14",
         default: "#EADDCA",
     },
+    teamsBases: {
+        teamStreamer: null,
+        teamChat: null
+    },
 
     findSvgElement: function (identifier) {
         let normalizedIdentifier = identifier.toUpperCase();
@@ -23,6 +27,17 @@ const mapState = {
             return null;
         }
         return element;
+    },
+    
+    setHomeBase: function(team, identifier) {
+        const svgElement = this.findSvgElement(identifier);
+        if (!svgElement) {
+            console.error("Home base place element not found:", identifier);
+            return;
+        }
+
+        svgElement.style.fill = this.teamColors[team]; // Update the color of the home base
+        console.log(`Set ${team} home base at ${identifier} to ${this.teamColors[team]}`); // Debug output
     },
 
     setPlace: function(identifier, type, color, success, team) {

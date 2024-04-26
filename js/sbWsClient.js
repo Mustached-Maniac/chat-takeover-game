@@ -39,7 +39,25 @@ function bindEvents() {
 
 function handleSVGMapInteraction(wsdata) {
     if (wsdata.event.source === "General" && wsdata.event.type === "Custom") {
-        let team = wsdata.data.currentTeam;  // 'team' should be either 'teamStreamer' or 'teamChat'
+        if (wsdata.data.streamerColor && wsdata.data.chatColor && wsdata.data.streamerStartPlace && wsdata.data.chatStartPlace) {
+            // Check and debug
+            console.log('Updating colors and home bases:', wsdata.data);
+
+            // Ensuring mapState.teamBases is initialized
+            if (!mapState.teamsBases) {
+                console.error('teamsBases is not initialized in mapState.');
+                mapState.teamsBases = { teamStreamer: null, teamChat: null };
+            }
+
+            mapState.teamColors.teamStreamer = wsdata.data.streamerColor;
+            mapState.teamColors.teamChat = wsdata.data.chatColor;
+            mapState.teamsBases.teamStreamer = wsdata.data.streamerStartPlace;
+            mapState.teamsBases.teamChat = wsdata.data.chatStartPlace;
+
+            mapState.setHomeBase('teamStreamer', wsdata.data.streamerStartPlace);
+            mapState.setHomeBase('teamChat', wsdata.data.chatStartPlace);
+        }
+        let team = wsdata.data.currentTeam;
         let startColor = mapState.teamColors[team];
 
         if (wsdata.data.startPlace) {
