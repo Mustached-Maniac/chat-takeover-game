@@ -11,8 +11,6 @@ Brain dump for ideas/items needing to be tidied up.
  - [ ] Update/store global list for "ownership" after every turn
  - [ ] Add logic to determine percentage controlled by team (both population and sq miles)
     - [ ] store as temp globals to be used for commands, etc.
- - [ ] Add on-screen polling (2-5 options) *will require move source in OBS*
-    - [ ] pass poll result as teamChat prompt
  - [ ] Add Set-Up Action
     - [x] Store API key if don't already have one
     - [x] Set streamer/chat team colors
@@ -22,12 +20,12 @@ Brain dump for ideas/items needing to be tidied up.
     - [ ] Requires creating a group / adding players once voteCount > X
  - [ ] Keep track of how many times each user voter for end of game credits?
  - [ ] M.U.L.T.I. P.L.A.T.F.O.R.M. S.U.P.P.O.R.T.
-    - [ ] Case statements to send "narrative" to correct chat based on how received
+    - [x] Case statements to send "narrative" to correct chat based on how received
  
  ### Commands
  - [ ] Initialization (may not be required, just use start game)
  - [ ] Start Game
- - [ ] Make Move (streamer / chat separate)
+ - [x] Make Move (streamer / chat separate)
  - [ ] Current "ownership" percentages
  - [ ] User win/loss ratio
  - [ ] "End Now" - determines the winner based on current "ownership" levels (special prompt required)
@@ -42,6 +40,8 @@ Brain dump for ideas/items needing to be tidied up.
  - [x] Blur background during showcase
  - [x] Handle incoming websocket payloads from SB
     - [ ] Receive/check dictionary for ownership logic?
+ - [x] Add on-screen polling (2-5 options) / moved from SB sections ~~will require move source in OBS~~
+    - [x] pass poll result as teamChat prompt
  - [ ] Add rumble for endPlace
  - [ ] Add animated arrow (*maybe* cannonballs, bullets, etc?) from startPlace to endPlace <use another container?>
  - [ ] Add sound effects

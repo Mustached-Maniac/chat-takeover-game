@@ -2,11 +2,10 @@ let ws;
 
 function connectws() {
     if ("WebSocket" in window) {
-        console.info("Connecting to Streamer.Bot");
         ws = new WebSocket("ws://127.0.0.1:8080");
         bindEvents();
     } else {
-        console.error("WebSocket NOT supported by your Browser!");
+        console.error("Your Browser does not support Websockets");
     }
 }
 
@@ -21,14 +20,16 @@ function bindEvents() {
                 YouTube: ["Message", "SuperChat"],
             },
         }));
+        console.info("Successfully opened WebSocket connection and subscribed to selected events.");
     };
 
     ws.onmessage = (event) => {
         const wsdata = JSON.parse(event.data);
         if (wsdata.status === "ok" || wsdata.event.source == null) {
+            console.log("Received 'ok' status or null source.");
             return;
         }
-        handleSVGMapInteraction(wsdata);
+        handleWebSocketData(wsdata);
     };
 
     ws.onclose = () => {
@@ -37,36 +38,126 @@ function bindEvents() {
     };
 }
 
-function handleSVGMapInteraction(wsdata) {
+function handleWebSocketData(wsdata) {
     if (wsdata.event.source === "General" && wsdata.event.type === "Custom") {
-        if (wsdata.data.streamerColor && wsdata.data.chatColor && wsdata.data.streamerStartPlace && wsdata.data.chatStartPlace) {
-            // Check and debug
-            console.log('Updating colors and home bases:', wsdata.data);
+        if (wsdata.data.options) {
+            displayVoteOptions(wsdata.data);
+        }
+        if (wsdata.data.streamerColor || wsdata.data.streamerStartPlace) {
+            updateMapState(wsdata.data);
+        }
+        if (wsdata.data.startPlace || wsdata.data.endPlace) {
+            updateMapMovements(wsdata.data);
+        }
+        if (wsdata.data.totalVotes !== undefined || Object.keys(wsdata.data).some(key => key.includes('VoteCount'))) {
+            updateVoteCounts(wsdata.data);
+        }
+    }
+}
 
-            // Ensuring mapState.teamBases is initialized
-            if (!mapState.teamsBases) {
-                console.error('teamsBases is not initialized in mapState.');
-                mapState.teamsBases = { teamStreamer: null, teamChat: null };
+function updateMapState(data) {
+    console.log('Updating map colors and bases:', data);
+
+    if (!mapState.teamsBases) {
+        console.error('Map state teamsBases is not initialized.');
+        mapState.teamsBases = { teamStreamer: null, teamChat: null };
+    }
+
+    mapState.teamColors.teamStreamer = data.streamerColor;
+    mapState.teamColors.teamChat = data.chatColor;
+    mapState.teamsBases.teamStreamer = data.streamerStartPlace;
+    mapState.teamsBases.teamChat = data.chatStartPlace;
+
+    mapState.setHomeBase('teamStreamer', data.streamerStartPlace);
+    mapState.setHomeBase('teamChat', data.chatStartPlace);
+
+    document.documentElement.style.setProperty('--streamer-color', data.streamerColor);
+    const optionsContainer = document.getElementById('voteOptionsContainer');
+    if (optionsContainer) {
+        optionsContainer.className = ''; 
+        optionsContainer.classList.add('voteOptions-' + data.votePosition); 
+    } else {
+        console.error('voteOptionsContainer not found');
+    }
+}
+
+function displayVoteOptions(data) {
+    const optionsContainer = document.getElementById('voteOptionsContainer');
+    if (!optionsContainer) {
+        console.error('Vote options container is not found on the page.');
+        return;
+    }
+
+    optionsContainer.innerHTML = '';
+    optionsContainer.classList.add('active');
+
+    const options = data.options;
+    let pollDuration = data.pollDuration;
+
+    options.forEach((option, index) => {
+        const optionElement = document.createElement('div');
+        optionElement.className = 'vote-option-popup';
+        optionElement.innerHTML = `
+            <span class="vote-prompt">!vote ${index + 1}:&nbsp;&nbsp;</span>
+            <span>${option.content}&nbsp;&nbsp;</span>
+            <span class="vote-count" id="pollOption${index + 1}VoteCount">0</span>
+        `;
+        optionsContainer.appendChild(optionElement);
+    });
+  
+    const totalVotesElement = document.createElement('div');
+    totalVotesElement.id = 'totalVotesAndCountdown';
+    totalVotesElement.textContent = `Time Remaining: ${pollDuration}s | Total Votes: 0`;
+    optionsContainer.appendChild(totalVotesElement);
+
+    let countdownInterval = setInterval(() => {
+        pollDuration -= 1;
+        const totalVotesMatch = totalVotesElement.textContent.match(/Total Votes: (\d+)/);
+        const currentTotalVotes = totalVotesMatch ? totalVotesMatch[1] : '0';
+    
+        totalVotesElement.textContent = `Time Remaining: ${pollDuration}s | Total Votes: ${currentTotalVotes}`;
+    
+        if (pollDuration <= 0) {
+            clearInterval(countdownInterval);
+            optionsContainer.classList.remove('active');
+            optionsContainer.innerHTML = '';
+        }
+    }, 1000);
+    
+}
+
+function updateVoteCounts(data) {
+    Object.keys(data).forEach(key => {
+        if (key.startsWith("pollOption") && key.endsWith("VoteCount")) {
+            const voteCountElement = document.getElementById(key);
+            if (voteCountElement) {
+                voteCountElement.textContent = data[key];
+                voteCountElement.style.visibility = 'visible'; 
+            } else {
+                console.error('Vote count element not found for:', key);
             }
-
-            mapState.teamColors.teamStreamer = wsdata.data.streamerColor;
-            mapState.teamColors.teamChat = wsdata.data.chatColor;
-            mapState.teamsBases.teamStreamer = wsdata.data.streamerStartPlace;
-            mapState.teamsBases.teamChat = wsdata.data.chatStartPlace;
-
-            mapState.setHomeBase('teamStreamer', wsdata.data.streamerStartPlace);
-            mapState.setHomeBase('teamChat', wsdata.data.chatStartPlace);
         }
-        let team = wsdata.data.currentTeam;
-        let startColor = mapState.teamColors[team];
+    });
+    if (data.totalVotes !== undefined) {
+        const totalVotesElement = document.getElementById('totalVotesAndCountdown');
+        if (totalVotesElement) {
+            const timeRemainingMatch = totalVotesElement.textContent.match(/Time Remaining: \d+s/);
+            const timeRemainingText = timeRemainingMatch ? timeRemainingMatch[0] : 'Time Remaining: --';
+            totalVotesElement.textContent = `${timeRemainingText} | Total Votes: ${data.totalVotes}`;
+        }
+    }
+}
 
-        if (wsdata.data.startPlace) {
-            mapState.setPlace(wsdata.data.startPlace, 'start', startColor, wsdata.data.turnResult === "success", team);
-        }
-        if (wsdata.data.endPlace) {
-            let endColor = wsdata.data.turnResult === "success" ? startColor : mapState.teamColors.default;
-            mapState.setPlace(wsdata.data.endPlace, 'end', endColor, wsdata.data.turnResult === "success", team);
-        }
+function updateMapMovements(data) {
+    let team = data.currentTeam;
+    let startColor = mapState.teamColors[team];
+
+    if (data.startPlace) {
+        mapState.setPlace(data.startPlace, 'start', startColor, data.turnResult === "success", team);
+    }
+    if (data.endPlace) {
+        let endColor = data.turnResult === "success" ? startColor : mapState.teamColors.default;
+        mapState.setPlace(data.endPlace, 'end', endColor, data.turnResult === "success", team);
     }
 }
 

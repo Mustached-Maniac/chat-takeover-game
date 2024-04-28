@@ -4,55 +4,155 @@
 }
 
 body, html {
-    width: 100%; /* Ensure the body and html take the full viewport width */
-    height: 100%; /* Ensure the body and html take the full viewport height */
+    width: 100%; 
+    height: 100%; 
     margin: 0;
     padding: 0;
     background-color: hwb(181 101 29);
-    overflow-x: hidden; /* Hide horizontal scrollbar */
+    overflow-x: hidden;
 }
 
 #svgMapContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed; /* Changed from absolute to fixed */
+    position: fixed; 
     left: 0;
-    right: 0; /* Added to ensure full width */
-    bottom: 0; /* Added to ensure full height */
-    overflow: hidden; /* Hides any overflow */
+    right: 0; 
+    bottom: 0; 
+    overflow: hidden; 
 }
 
 #svgMapContainer svg {
-    width: 100vw; /* Responsive width */
-    height: 100vh; /* Responsive height */
-    max-width: 1920px; /* Maximum width */
-    max-height: 1080px; /* Maximum height */
-    margin: auto; /* Centers within the flex container */
+    width: 100vw; 
+    height: 100vh; 
+    max-width: 1920px; 
+    max-height: 1080px; 
+    margin: auto; 
 }
 
 path {
-    transition: transform 0.5s ease, fill 0.5s ease; /* Smooth transformation and color transition */
+    transition: transform 0.5s ease, fill 0.5s ease; 
 }
 
 .blur {
     filter: blur(6px);
   }
 
-  #pageTitle {
+#voteOptionsContainer {
+    display: none;
+    position: fixed;
+    top: 50%; 
+    transform: translateY(-50%); 
+    width: 450px;
+    z-index: 1000;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    border-radius: 15px;
+    box-sizing: border-box;
+}
+
+.voteOptions-left {
+    left: 10%; 
+    transform: translateX(0%) translateY(-50%);
+}
+
+.voteOptions-center {
+    left: 40%;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.voteOptions-right {
+    right: 5%;
+    transform: translateX(0%) translateY(-50%);
+}
+
+.vote-option-popup {
+    position: relative;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin: 10px 0;
+    width: calc(100% - 20px);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: space-between;
+    text-align: left;
+    animation: fadeIn 0.5s;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.vote-option-popup::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: var(--streamer-color); /* Use the color variable */
+    opacity: 0.7; /* Your desired opacity */
+    border-radius: inherit; /* Inherit border-radius from parent */
+    z-index: -1; /* Place it behind the content */
+}
+
+.vote-option-popup > * {
+    position: relative;
+    z-index: 1;
+}
+
+#totalVotesAndCountdown {
+    background-color: var(--streamer-color); /* Use the color variable */
+    border: 3px solid #000; /* Thicker black border */
+    padding: 15px;
+    margin-top: 10px; /* Spacing from the last vote option */
+    width: calc(100% - 26px); /* Adjust for thicker border */
+    border-radius: 10px;
+    text-align: center;
+    box-sizing: border-box; /* Include padding and border in the width and height */
+    display: flex;
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+.vote-prompt {
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.vote-count {
+    margin-left: auto;
+}
+
+#voteOptionsContainer.active {
+    display: flex; 
+}
+
+@keyframes fadeIn {
+    from {
+        transform: translateY(10px);
+    }
+    to {
+        transform: translateY(0px);
+    }
+}
+
+#pageTitle {
     color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
     position: fixed;
-    top: -60px; /* Stay at the top */
-    left: 50%; /* Center the header */
+    top: -60px;
+    left: 50%; 
     transform: translateX(-50%);
-    z-index: 10; /* Ensure it stays above other content */
-    max-width: 1920px; /* Maximum width for the header */
-    font-size: 60px; /* Set an initial font size */
-    margin: 0 auto; /* Center the text horizontally */
+    z-index: 10; 
+    max-width: 1920px; 
+    font-size: 60px;
+    margin: 0 auto;
 }
 
 #pageTitle::before, #pageTitle::after {
@@ -65,7 +165,7 @@ path {
 }
 
 h1 {
-    margin-top: 1em; /* Adjust top margin to give some space from the top edge */
+    margin-top: 1em;
     color: #ffffff;
     font-family: 'Twitch Font', sans-serif;
     text-align: center;
