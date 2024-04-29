@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-
 <svg
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
@@ -12,44 +11,6 @@
    width="1000"
    id="svg"
    >
-
-  <defs
-     id="defs4">
-    <style
-       type="text/css"
-       id="style6">path { fill-rule: evenodd; }</style>
-  </defs>
-  <metadata
-     id="metadata8">
-    <views
-       id="views10">
-      <view
-         h="589.235294118"
-         padding="0"
-         w="1000"
-         id="view12">
-        <proj
-           id="laea-usa"
-           lat0="45"
-           lon0="-100" />
-        <bbox
-           h="321.97"
-           w="589.33"
-           x="690.09"
-           y="918.69"
-           id="bbox15" />
-      </view>
-    </views>
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
   <path
      inkscape:connector-curvature="0"
      id="MA"

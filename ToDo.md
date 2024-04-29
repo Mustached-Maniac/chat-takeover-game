@@ -42,6 +42,7 @@ Brain dump for ideas/items needing to be tidied up.
     - [x] Receive/check dictionary for ownership logic?
  - [x] Add on-screen polling (2-5 options) / moved from SB sections ~~will require move source in OBS~~
     - [x] pass poll result as teamChat prompt
+    - [ ] Add fill color as votes update
  - [ ] Add rumble for endPlace
  - [ ] Add animated arrow (*maybe* cannonballs, bullets, etc?) from startPlace to endPlace <use another container?>
  - [ ] Add sound effects
