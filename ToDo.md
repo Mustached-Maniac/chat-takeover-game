@@ -8,7 +8,7 @@ Brain dump for ideas/items needing to be tidied up.
  - [x] Integrate GPT responses
     - [x] Ensure tags are included with each response
  - [x] Pass tags through WS to trigger actions
- - [ ] Update/store global list for "ownership" after every turn
+ - [x] Update/store global list for "ownership" after every turn
  - [ ] Add logic to determine percentage controlled by team (both population and sq miles)
     - [ ] store as temp globals to be used for commands, etc.
  - [ ] Add Set-Up Action
@@ -39,7 +39,7 @@ Brain dump for ideas/items needing to be tidied up.
  - [x] Smooth easing in/out of position
  - [x] Blur background during showcase
  - [x] Handle incoming websocket payloads from SB
-    - [ ] Receive/check dictionary for ownership logic?
+    - [x] Receive/check dictionary for ownership logic?
  - [x] Add on-screen polling (2-5 options) / moved from SB sections ~~will require move source in OBS~~
     - [x] pass poll result as teamChat prompt
  - [ ] Add rumble for endPlace
@@ -60,7 +60,8 @@ Brain dump for ideas/items needing to be tidied up.
  - [ ] Ensure README has thorough instructions
  - [ ] Create post for SB Extension Site
  - [ ] Find testers (maybe add text log to consolidate their results/data)
- - [ ] Remote version checking?
+ - [x] Remote version checking?
+    - [x] Auto updater included
  - [ ] Narrative on screen (via OBS or JS)?
  - [ ] Script YT Video(s)
     - [ ] Long-form demonstration
