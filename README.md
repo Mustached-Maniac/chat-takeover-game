@@ -1,4 +1,4 @@
-![Chat Takeover Game](https://fontmeme.com/permalink/240415/b1c2ac039ce8603ec055a5d3b5d5e042.png)
+<a href="https://fontmeme.com/fonts/twitchy-tv-font/"><img src="https://fontmeme.com/permalink/240429/9bbea78eba0540b5aa91b7fa7c816ad2.png" alt="twitchy-tv-font" border="0"></a>
 
 ---
 
