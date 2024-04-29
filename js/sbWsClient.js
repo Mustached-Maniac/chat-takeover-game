@@ -71,7 +71,17 @@ function updateMapState(data) {
     mapState.setHomeBase('teamStreamer', data.streamerStartPlace);
     mapState.setHomeBase('teamChat', data.chatStartPlace);
 
-    document.documentElement.style.setProperty('--streamer-color', data.streamerColor);
+    if (data.streamerColor) {
+        const streamerColorRGBA = hexToRGBA(data.streamerColor, 0.8);
+        document.documentElement.style.setProperty('--streamer-color', data.streamerColor);
+        document.documentElement.style.setProperty('--streamer-color-adjusted', streamerColorRGBA);
+    }
+    if (data.chatColor) {
+        const chatColorRGBA = hexToRGBA(data.chatColor, 0.8);
+        document.documentElement.style.setProperty('--chat-color', data.chatColor);
+        document.documentElement.style.setProperty('--chat-color-adjusted', chatColorRGBA);
+    }
+
     const optionsContainer = document.getElementById('voteOptionsContainer');
     if (optionsContainer) {
         optionsContainer.className = ''; 
@@ -79,6 +89,18 @@ function updateMapState(data) {
     } else {
         console.error('voteOptionsContainer not found');
     }
+}
+
+function hexToRGBA(hex, opacity) {
+    if (hex.length === 9) { 
+        var r = parseInt(hex.slice(1, 3), 16),
+            g = parseInt(hex.slice(3, 5), 16),
+            b = parseInt(hex.slice(5, 7), 16),
+            a = parseFloat((parseInt(hex.slice(7, 9), 16) / 255).toFixed(2));       
+        a = (a * opacity).toFixed(2);
+        return `rgba(${r}, ${g}, ${b}, ${a})`;
+    }
+    return hex.slice(0, 7); 
 }
 
 function displayVoteOptions(data) {
@@ -127,25 +149,34 @@ function displayVoteOptions(data) {
 }
 
 function updateVoteCounts(data) {
+    const totalVotesElement = document.getElementById('totalVotesAndCountdown');
+    let totalVotes = data.totalVotes || 0;  
+
+    if (totalVotesElement) {
+        const timeRemainingMatch = totalVotesElement.textContent.match(/Time Remaining: \d+s/);
+        const timeRemainingText = timeRemainingMatch ? timeRemainingMatch[0] : 'Time Remaining: --';
+        totalVotesElement.textContent = `${timeRemainingText} | Total Votes: ${totalVotes}`;
+        totalVotesElement.dataset.totalVotes = totalVotes; 
+    }
+
     Object.keys(data).forEach(key => {
-        if (key.startsWith("pollOption") && key.endsWith("VoteCount")) {
-            const voteCountElement = document.getElementById(key);
+        if (key.includes("pollOption")) {
+            const voteCountElementId = key + "VoteCount";  
+            const voteCountElement = document.getElementById(voteCountElementId);
             if (voteCountElement) {
-                voteCountElement.textContent = data[key];
-                voteCountElement.style.visibility = 'visible'; 
+                const voteCount = parseInt(data[key], 10);
+                voteCountElement.textContent = voteCount;
+
+                const percentageWidth = totalVotes > 0 ? (voteCount / totalVotes * 100).toFixed(2) + '%' : '0%';
+                const optionElement = voteCountElement.closest('.vote-option-popup');
+                if (optionElement) {
+                    optionElement.style.setProperty('--fill-width', percentageWidth);
+                }
             } else {
-                console.error('Vote count element not found for:', key);
+                console.error('Vote count element not found for ID:', voteCountElementId);
             }
         }
     });
-    if (data.totalVotes !== undefined) {
-        const totalVotesElement = document.getElementById('totalVotesAndCountdown');
-        if (totalVotesElement) {
-            const timeRemainingMatch = totalVotesElement.textContent.match(/Time Remaining: \d+s/);
-            const timeRemainingText = timeRemainingMatch ? timeRemainingMatch[0] : 'Time Remaining: --';
-            totalVotesElement.textContent = `${timeRemainingText} | Total Votes: ${data.totalVotes}`;
-        }
-    }
 }
 
 function updateMapMovements(data) {

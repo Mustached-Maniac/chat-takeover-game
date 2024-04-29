@@ -82,20 +82,20 @@ path {
     animation: fadeIn 0.5s;
     cursor: pointer;
     box-sizing: border-box;
+    background-color: var(--streamer-color-adjusted);
 }
 
 .vote-option-popup::before {
     content: '';
-    display: block;
     position: absolute;
     top: 0;
-    right: 0;
-    bottom: 0;
     left: 0;
-    background-color: var(--streamer-color); /* Use the color variable */
-    opacity: 0.7; /* Your desired opacity */
-    border-radius: inherit; /* Inherit border-radius from parent */
-    z-index: -1; /* Place it behind the content */
+    bottom: 0;
+    width: var(--fill-width); 
+    background-color: var(--chat-color-adjusted);
+    border-radius: inherit;
+    transition: width 0.5s ease;
+    z-index: 0;
 }
 
 .vote-option-popup > * {
@@ -104,17 +104,17 @@ path {
 }
 
 #totalVotesAndCountdown {
-    background-color: var(--streamer-color); /* Use the color variable */
-    border: 3px solid #000; /* Thicker black border */
+    background-color: var(--streamer-color);
+    border: 3px solid #000;
     padding: 15px;
-    margin-top: 10px; /* Spacing from the last vote option */
-    width: calc(100% - 26px); /* Adjust for thicker border */
+    margin-top: 10px;
+    width: calc(100% - 26px);
     border-radius: 10px;
     text-align: center;
-    box-sizing: border-box; /* Include padding and border in the width and height */
+    box-sizing: border-box;
     display: flex;
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
+    justify-content: center; 
+    align-items: center;
 }
 
 .vote-prompt {
@@ -124,6 +124,7 @@ path {
 
 .vote-count {
     margin-left: auto;
+    font-weight: bold;
 }
 
 #voteOptionsContainer.active {
