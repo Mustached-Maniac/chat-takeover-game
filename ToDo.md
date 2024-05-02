@@ -19,7 +19,7 @@ Brain dump for ideas/items needing to be tidied up.
  - [ ] Store win/loss record for Broadcaster and each user who played (participated in at least X polls)
     - [ ] Requires creating a group / adding players once voteCount > X
  - [ ] Keep track of how many times each user voter for end of game credits?
- - [ ] M.U.L.T.I. P.L.A.T.F.O.R.M. S.U.P.P.O.R.T.
+ - [x] M.U.L.T.I. P.L.A.T.F.O.R.M. S.U.P.P.O.R.T.
     - [x] Case statements to send "narrative" to correct chat based on how received
  
  ### Commands
@@ -42,7 +42,7 @@ Brain dump for ideas/items needing to be tidied up.
     - [x] Receive/check dictionary for ownership logic?
  - [x] Add on-screen polling (2-5 options) / moved from SB sections ~~will require move source in OBS~~
     - [x] pass poll result as teamChat prompt
-    - [ ] Add fill color as votes update
+    - [x] Add fill color as votes update
  - [ ] Add rumble for endPlace
  - [ ] Add animated arrow (*maybe* cannonballs, bullets, etc?) from startPlace to endPlace <use another container?>
  - [ ] Add sound effects
