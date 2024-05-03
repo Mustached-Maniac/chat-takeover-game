@@ -44,7 +44,7 @@ path {
     position: fixed;
     top: 50%; 
     transform: translateY(-50%); 
-    width: 450px;
+    width: 550px;
     z-index: 1000;
     flex-direction: column;
     align-items: center;
@@ -55,7 +55,7 @@ path {
 
 .voteOptions-left {
     left: 10%; 
-    transform: translateX(0%) translateY(-50%);
+    transform: translateX(0%) translateY(-60%);
 }
 
 .voteOptions-center {
@@ -65,7 +65,7 @@ path {
 
 .voteOptions-right {
     right: 5%;
-    transform: translateX(0%) translateY(-50%);
+    transform: translateX(0%) translateY(-60%);
 }
 
 .vote-option-popup {
@@ -83,6 +83,8 @@ path {
     cursor: pointer;
     box-sizing: border-box;
     background-color: var(--streamer-color-adjusted);
+    font-size: 28px; /* Increased font size */
+    line-height: 1.5; /* Improved line spacing for better readability */
 }
 
 .vote-option-popup::before {
@@ -115,15 +117,18 @@ path {
     display: flex;
     justify-content: center; 
     align-items: center;
+    font-size: 28px;
 }
 
 .vote-prompt {
     white-space: nowrap;
+    font-size: 32px;
     font-weight: bold;
 }
 
 .vote-count {
     margin-left: auto;
+    font-size: 32px;
     font-weight: bold;
 }
 
